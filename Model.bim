@@ -1,0 +1,1143 @@
+{
+  "name": "SemanticModel",
+  "compatibilityLevel": 1500,
+  "model": {
+    "culture": "hr-HR",
+    "dataSources": [
+      {
+        "type": "structured",
+        "name": "SQL/DESKTOP-TMTVDKE\\BUI;WideWorldImportersDW",
+        "connectionDetails": {
+          "protocol": "tds",
+          "address": {
+            "server": "DESKTOP-TMTVDKE\\BUI",
+            "database": "WideWorldImportersDW"
+          },
+          "authentication": null,
+          "query": null
+        },
+        "credential": {
+          "AuthenticationKind": "ServiceAccount",
+          "kind": "SQL",
+          "path": "desktop-tmtvdke\\bui;WideWorldImportersDW",
+          "EncryptConnection": false
+        }
+      }
+    ],
+    "tables": [
+      {
+        "name": "Dimension City",
+        "columns": [
+          {
+            "name": "City Key",
+            "dataType": "int64",
+            "sourceColumn": "City Key"
+          },
+          {
+            "name": "WWI City ID",
+            "dataType": "int64",
+            "sourceColumn": "WWI City ID"
+          },
+          {
+            "name": "City",
+            "dataType": "string",
+            "sourceColumn": "City"
+          },
+          {
+            "name": "State Province",
+            "dataType": "string",
+            "sourceColumn": "State Province"
+          },
+          {
+            "name": "Country",
+            "dataType": "string",
+            "sourceColumn": "Country"
+          },
+          {
+            "name": "Continent",
+            "dataType": "string",
+            "sourceColumn": "Continent"
+          },
+          {
+            "name": "Sales Territory",
+            "dataType": "string",
+            "sourceColumn": "Sales Territory"
+          },
+          {
+            "name": "Region",
+            "dataType": "string",
+            "sourceColumn": "Region"
+          },
+          {
+            "name": "Subregion",
+            "dataType": "string",
+            "sourceColumn": "Subregion"
+          },
+          {
+            "name": "Location",
+            "dataType": "string",
+            "sourceColumn": "Location"
+          },
+          {
+            "name": "Latest Recorded Population",
+            "dataType": "int64",
+            "sourceColumn": "Latest Recorded Population"
+          },
+          {
+            "name": "Valid From",
+            "dataType": "dateTime",
+            "sourceColumn": "Valid From"
+          },
+          {
+            "name": "Valid To",
+            "dataType": "dateTime",
+            "sourceColumn": "Valid To"
+          },
+          {
+            "name": "Lineage Key",
+            "dataType": "int64",
+            "sourceColumn": "Lineage Key"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/DESKTOP-TMTVDKE\\BUI;WideWorldImportersDW\",",
+                "    Dimension_City = Source{[Schema=\"Dimension\",Item=\"City\"]}[Data]",
+                "in",
+                "    Dimension_City"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Total Sales by City",
+            "expression": " CALCULATE(SUM('Fact Sale'[Total Including Tax]), ALL('Dimension City'))"
+          },
+          {
+            "name": "Number of Transactions by City",
+            "expression": " CALCULATE(COUNTROWS('Fact Sale'), ALL('Dimension City'))"
+          },
+          {
+            "name": "Avg Sales per Transaction by City",
+            "expression": " DIVIDE([Total Sales by City], [Number of Transactions by City], 0)"
+          },
+          {
+            "name": "City Sales Contribution",
+            "expression": " DIVIDE([Total Sales by City], CALCULATE(SUM('Fact Sale'[Total Including Tax]), ALL('Dimension City')), 0)"
+          },
+          {
+            "name": "Population Sales Ratio",
+            "expression": " DIVIDE([Total Sales by City], MAX('Dimension City'[Latest Recorded Population]), 0)"
+          }
+        ],
+        "hierarchies": [
+          {
+            "name": "Geographical Hierarchy",
+            "levels": [
+              {
+                "name": "Country",
+                "ordinal": 0,
+                "column": "Country"
+              },
+              {
+                "name": "Continent",
+                "ordinal": 1,
+                "column": "Continent"
+              },
+              {
+                "name": "State Province",
+                "ordinal": 2,
+                "column": "State Province"
+              },
+              {
+                "name": "City",
+                "ordinal": 3,
+                "column": "City"
+              }
+            ]
+          },
+          {
+            "name": "Region Hierarchy",
+            "levels": [
+              {
+                "name": "Region",
+                "ordinal": 0,
+                "column": "Region"
+              },
+              {
+                "name": "Subregion",
+                "ordinal": 1,
+                "column": "Subregion"
+              },
+              {
+                "name": "Sales Territory",
+                "ordinal": 2,
+                "column": "Sales Territory"
+              },
+              {
+                "name": "State Province",
+                "ordinal": 3,
+                "column": "State Province"
+              },
+              {
+                "name": "City",
+                "ordinal": 4,
+                "column": "City"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Dimension Date",
+        "columns": [
+          {
+            "name": "Date",
+            "dataType": "dateTime",
+            "sourceColumn": "Date"
+          },
+          {
+            "name": "Day Number",
+            "dataType": "int64",
+            "sourceColumn": "Day Number"
+          },
+          {
+            "name": "Day",
+            "dataType": "string",
+            "sourceColumn": "Day"
+          },
+          {
+            "name": "Month",
+            "dataType": "string",
+            "sourceColumn": "Month"
+          },
+          {
+            "name": "Short Month",
+            "dataType": "string",
+            "sourceColumn": "Short Month"
+          },
+          {
+            "name": "Calendar Month Number",
+            "dataType": "int64",
+            "sourceColumn": "Calendar Month Number"
+          },
+          {
+            "name": "Calendar Month Label",
+            "dataType": "string",
+            "sourceColumn": "Calendar Month Label"
+          },
+          {
+            "name": "Calendar Year",
+            "dataType": "int64",
+            "sourceColumn": "Calendar Year"
+          },
+          {
+            "name": "Calendar Year Label",
+            "dataType": "string",
+            "sourceColumn": "Calendar Year Label"
+          },
+          {
+            "name": "Fiscal Month Number",
+            "dataType": "int64",
+            "sourceColumn": "Fiscal Month Number"
+          },
+          {
+            "name": "Fiscal Month Label",
+            "dataType": "string",
+            "sourceColumn": "Fiscal Month Label"
+          },
+          {
+            "name": "Fiscal Year",
+            "dataType": "int64",
+            "sourceColumn": "Fiscal Year"
+          },
+          {
+            "name": "Fiscal Year Label",
+            "dataType": "string",
+            "sourceColumn": "Fiscal Year Label"
+          },
+          {
+            "name": "ISO Week Number",
+            "dataType": "int64",
+            "sourceColumn": "ISO Week Number"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/DESKTOP-TMTVDKE\\BUI;WideWorldImportersDW\",",
+                "    Dimension_Date = Source{[Schema=\"Dimension\",Item=\"Date\"]}[Data]",
+                "in",
+                "    Dimension_Date"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Sales by Year",
+            "expression": " CALCULATE([Total Sales], ALL('Dimension Date'[Calendar Year]))"
+          },
+          {
+            "name": "Yearly Profit",
+            "expression": " CALCULATE([Total Profit], ALL('Dimension Date'[Calendar Year]))"
+          },
+          {
+            "name": "Transactions per Month",
+            "expression": " CALCULATE([Total Transactions], ALL('Dimension Date'[Month]))"
+          },
+          {
+            "name": "Average Daily Sales",
+            "expression": " AVERAGE('Fact Sale'[Total Including Tax])"
+          },
+          {
+            "name": "Monthly Profit Margin",
+            "expression": " CALCULATE([Profit Margin Percentage], ALL('Dimension Date'[Month]))"
+          }
+        ],
+        "hierarchies": [
+          {
+            "name": "Fiscal Year Hierarchy",
+            "levels": [
+              {
+                "name": "Fiscal Year",
+                "ordinal": 0,
+                "column": "Fiscal Year"
+              },
+              {
+                "name": "Fiscal Month Number",
+                "ordinal": 1,
+                "column": "Fiscal Month Number"
+              },
+              {
+                "name": "Date",
+                "ordinal": 2,
+                "column": "Date"
+              }
+            ]
+          },
+          {
+            "name": "Calendar Year Hierarchy",
+            "levels": [
+              {
+                "name": "Calendar Year",
+                "ordinal": 0,
+                "column": "Calendar Year"
+              },
+              {
+                "name": "Calendar Month Number",
+                "ordinal": 1,
+                "column": "Calendar Month Number"
+              },
+              {
+                "name": "Day",
+                "ordinal": 2,
+                "column": "Day"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Dimension Customer",
+        "columns": [
+          {
+            "name": "Customer Key",
+            "dataType": "int64",
+            "sourceColumn": "Customer Key"
+          },
+          {
+            "name": "WWI Customer ID",
+            "dataType": "int64",
+            "sourceColumn": "WWI Customer ID"
+          },
+          {
+            "name": "Customer",
+            "dataType": "string",
+            "sourceColumn": "Customer"
+          },
+          {
+            "name": "Bill To Customer",
+            "dataType": "string",
+            "sourceColumn": "Bill To Customer"
+          },
+          {
+            "name": "Category",
+            "dataType": "string",
+            "sourceColumn": "Category"
+          },
+          {
+            "name": "Buying Group",
+            "dataType": "string",
+            "sourceColumn": "Buying Group"
+          },
+          {
+            "name": "Primary Contact",
+            "dataType": "string",
+            "sourceColumn": "Primary Contact"
+          },
+          {
+            "name": "Postal Code",
+            "dataType": "string",
+            "sourceColumn": "Postal Code"
+          },
+          {
+            "name": "Valid From",
+            "dataType": "dateTime",
+            "sourceColumn": "Valid From"
+          },
+          {
+            "name": "Valid To",
+            "dataType": "dateTime",
+            "sourceColumn": "Valid To"
+          },
+          {
+            "name": "Lineage Key",
+            "dataType": "int64",
+            "sourceColumn": "Lineage Key"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/DESKTOP-TMTVDKE\\BUI;WideWorldImportersDW\",",
+                "    Dimension_Customer = Source{[Schema=\"Dimension\",Item=\"Customer\"]}[Data]",
+                "in",
+                "    Dimension_Customer"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Shop Sales Total",
+            "expression": " SUM('Fact Sale'[Total Including Tax])"
+          },
+          {
+            "name": "Profit Margin",
+            "expression": " DIVIDE(SUM('Fact Sale'[Profit]), [Shop Sales Total], 0)"
+          },
+          {
+            "name": "Average Transaction Value",
+            "expression": " DIVIDE([Shop Sales Total], COUNTROWS('Fact Sale'), 0)"
+          },
+          {
+            "name": "Total Customers",
+            "expression": " DISTINCTCOUNT('Fact Sale'[Customer Key])"
+          },
+          {
+            "name": "Average Sales per Customer",
+            "expression": " DIVIDE([Total Sales], [Total Customers], 0)"
+          },
+          {
+            "name": "Customer Profit Contribution",
+            "expression": " CALCULATE([Total Profit], ALL('Dimension Customer'[Customer Key]))"
+          },
+          {
+            "name": "Customer Retention Rate",
+            "expression": " DIVIDE(COUNTROWS('Dimension Customer'), [Total Customers], 0)"
+          }
+        ],
+        "hierarchies": [
+          {
+            "name": "Customer Hierarchy",
+            "levels": [
+              {
+                "name": "Category",
+                "ordinal": 0,
+                "column": "Category"
+              },
+              {
+                "name": "Bill To Customer",
+                "ordinal": 1,
+                "column": "Bill To Customer"
+              },
+              {
+                "name": "Buying Group",
+                "ordinal": 2,
+                "column": "Buying Group"
+              },
+              {
+                "name": "Customer",
+                "ordinal": 3,
+                "column": "Customer"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Dimension Employee",
+        "columns": [
+          {
+            "name": "Employee Key",
+            "dataType": "int64",
+            "sourceColumn": "Employee Key"
+          },
+          {
+            "name": "WWI Employee ID",
+            "dataType": "int64",
+            "sourceColumn": "WWI Employee ID"
+          },
+          {
+            "name": "Employee",
+            "dataType": "string",
+            "sourceColumn": "Employee"
+          },
+          {
+            "name": "Preferred Name",
+            "dataType": "string",
+            "sourceColumn": "Preferred Name"
+          },
+          {
+            "name": "Is Salesperson",
+            "dataType": "boolean",
+            "sourceColumn": "Is Salesperson"
+          },
+          {
+            "name": "Valid From",
+            "dataType": "dateTime",
+            "sourceColumn": "Valid From"
+          },
+          {
+            "name": "Valid To",
+            "dataType": "dateTime",
+            "sourceColumn": "Valid To"
+          },
+          {
+            "name": "Lineage Key",
+            "dataType": "int64",
+            "sourceColumn": "Lineage Key"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/DESKTOP-TMTVDKE\\BUI;WideWorldImportersDW\",",
+                "    Dimension_Employee = Source{[Schema=\"Dimension\",Item=\"Employee\"]}[Data]",
+                "in",
+                "    Dimension_Employee"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Total Sales by Employee",
+            "expression": " CALCULATE(SUM('Fact Sale'[Total Including Tax]), ALL('Dimension Employee'))"
+          },
+          {
+            "name": "Total Transactions by Employee",
+            "expression": " CALCULATE(COUNTROWS('Fact Sale'), ALL('Dimension Employee'))"
+          },
+          {
+            "name": "Avg Sale per Transaction by Employee",
+            "expression": " DIVIDE([Total Sales by Employee], [Total Transactions by Employee], 0)",
+            "kpi": {
+              "targetExpression": "'Dimension Employee'[Employee Productivity Target]",
+              "statusGraphic": "Traffic Light - Single",
+              "statusExpression": [
+                "var x='Dimension Employee'[Avg Sale per Transaction by Employee]/'Dimension Employee'[_Avg Sale per Transaction by Employee Goal] return",
+                "            if(ISBLANK(x),BLANK(),",
+                "                    If(x<0.4,-1,",
+                "\t                If(x<0.8,0,1)",
+                "                )",
+                "            )",
+                "            "
+              ],
+              "annotations": [
+                {
+                  "name": "GoalType",
+                  "value": "Measure"
+                },
+                {
+                  "name": "KpiStatusType",
+                  "value": "Linear"
+                },
+                {
+                  "name": "KpiThresholdType",
+                  "value": "Percentage"
+                },
+                {
+                  "name": "KpiThresholdOrdering",
+                  "value": "Ascending"
+                },
+                {
+                  "name": "KpiThresholdCount",
+                  "value": "2"
+                },
+                {
+                  "name": "KpiThreshold_0",
+                  "value": "40"
+                },
+                {
+                  "name": "KpiThreshold_1",
+                  "value": "80"
+                }
+              ]
+            }
+          },
+          {
+            "name": "Employee Sales Contribution",
+            "expression": " DIVIDE([Total Sales by Employee], CALCULATE(SUM('Fact Sale'[Total Including Tax]), ALL('Dimension Employee')), 0)"
+          },
+          {
+            "name": "Number of Active Employees",
+            "expression": " DISTINCTCOUNT('Dimension Employee'[Employee Key])"
+          },
+          {
+            "name": "Employee Productivity Target",
+            "expression": [
+              " ",
+              "[Avg Sale per Transaction by Employee] * 1.10"
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Dimension Stock Item",
+        "columns": [
+          {
+            "name": "Stock Item Key",
+            "dataType": "int64",
+            "sourceColumn": "Stock Item Key"
+          },
+          {
+            "name": "WWI Stock Item ID",
+            "dataType": "int64",
+            "sourceColumn": "WWI Stock Item ID"
+          },
+          {
+            "name": "Stock Item",
+            "dataType": "string",
+            "sourceColumn": "Stock Item"
+          },
+          {
+            "name": "Color",
+            "dataType": "string",
+            "sourceColumn": "Color"
+          },
+          {
+            "name": "Selling Package",
+            "dataType": "string",
+            "sourceColumn": "Selling Package"
+          },
+          {
+            "name": "Buying Package",
+            "dataType": "string",
+            "sourceColumn": "Buying Package"
+          },
+          {
+            "name": "Brand",
+            "dataType": "string",
+            "sourceColumn": "Brand"
+          },
+          {
+            "name": "Size",
+            "dataType": "string",
+            "sourceColumn": "Size"
+          },
+          {
+            "name": "Lead Time Days",
+            "dataType": "int64",
+            "sourceColumn": "Lead Time Days"
+          },
+          {
+            "name": "Quantity Per Outer",
+            "dataType": "int64",
+            "sourceColumn": "Quantity Per Outer"
+          },
+          {
+            "name": "Is Chiller Stock",
+            "dataType": "boolean",
+            "sourceColumn": "Is Chiller Stock"
+          },
+          {
+            "name": "Barcode",
+            "dataType": "string",
+            "sourceColumn": "Barcode"
+          },
+          {
+            "name": "Tax Rate",
+            "dataType": "double",
+            "sourceColumn": "Tax Rate"
+          },
+          {
+            "name": "Unit Price",
+            "dataType": "double",
+            "sourceColumn": "Unit Price"
+          },
+          {
+            "name": "Recommended Retail Price",
+            "dataType": "double",
+            "sourceColumn": "Recommended Retail Price"
+          },
+          {
+            "name": "Typical Weight Per Unit",
+            "dataType": "double",
+            "sourceColumn": "Typical Weight Per Unit"
+          },
+          {
+            "name": "Valid From",
+            "dataType": "dateTime",
+            "sourceColumn": "Valid From"
+          },
+          {
+            "name": "Valid To",
+            "dataType": "dateTime",
+            "sourceColumn": "Valid To"
+          },
+          {
+            "name": "Lineage Key",
+            "dataType": "int64",
+            "sourceColumn": "Lineage Key"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/DESKTOP-TMTVDKE\\BUI;WideWorldImportersDW\",",
+                "    #\"Dimension_Stock Item\" = Source{[Schema=\"Dimension\",Item=\"Stock Item\"]}[Data]",
+                "in",
+                "    #\"Dimension_Stock Item\""
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Total Sales by Item",
+            "expression": " CALCULATE(SUM('Fact Sale'[Total Including Tax]), ALL('Dimension Stock Item'))"
+          },
+          {
+            "name": "Average Price of Stock Item",
+            "expression": " AVERAGE('Dimension Stock Item'[Unit Price])"
+          },
+          {
+            "name": "Total Units Sold by Item",
+            "expression": " CALCULATE(SUM('Fact Sale'[Quantity]), ALL('Dimension Stock Item'))"
+          },
+          {
+            "name": "Stock Item Profitability",
+            "expression": " CALCULATE(SUM('Fact Sale'[Profit]), ALL('Dimension Stock Item'))"
+          },
+          {
+            "name": "Average Inventory Value",
+            "expression": " AVERAGE('Dimension Stock Item'[Recommended Retail Price]) "
+          }
+        ],
+        "hierarchies": [
+          {
+            "name": "Item Brand Hierarchy",
+            "levels": [
+              {
+                "name": "Brand",
+                "ordinal": 0,
+                "column": "Brand"
+              },
+              {
+                "name": "Stock Item",
+                "ordinal": 1,
+                "column": "Stock Item"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Fact Sale",
+        "columns": [
+          {
+            "name": "Sale Key",
+            "dataType": "int64",
+            "sourceColumn": "Sale Key"
+          },
+          {
+            "name": "City Key",
+            "dataType": "int64",
+            "sourceColumn": "City Key"
+          },
+          {
+            "name": "Customer Key",
+            "dataType": "int64",
+            "sourceColumn": "Customer Key"
+          },
+          {
+            "name": "Bill To Customer Key",
+            "dataType": "int64",
+            "sourceColumn": "Bill To Customer Key"
+          },
+          {
+            "name": "Stock Item Key",
+            "dataType": "int64",
+            "sourceColumn": "Stock Item Key"
+          },
+          {
+            "name": "Invoice Date Key",
+            "dataType": "dateTime",
+            "sourceColumn": "Invoice Date Key"
+          },
+          {
+            "name": "Delivery Date Key",
+            "dataType": "dateTime",
+            "sourceColumn": "Delivery Date Key"
+          },
+          {
+            "name": "Salesperson Key",
+            "dataType": "int64",
+            "sourceColumn": "Salesperson Key"
+          },
+          {
+            "name": "WWI Invoice ID",
+            "dataType": "int64",
+            "sourceColumn": "WWI Invoice ID"
+          },
+          {
+            "name": "Description",
+            "dataType": "string",
+            "sourceColumn": "Description"
+          },
+          {
+            "name": "Package",
+            "dataType": "string",
+            "sourceColumn": "Package"
+          },
+          {
+            "name": "Quantity",
+            "dataType": "int64",
+            "sourceColumn": "Quantity"
+          },
+          {
+            "name": "Unit Price",
+            "dataType": "double",
+            "sourceColumn": "Unit Price"
+          },
+          {
+            "name": "Tax Rate",
+            "dataType": "double",
+            "sourceColumn": "Tax Rate"
+          },
+          {
+            "name": "Total Excluding Tax",
+            "dataType": "double",
+            "sourceColumn": "Total Excluding Tax"
+          },
+          {
+            "name": "Tax Amount",
+            "dataType": "double",
+            "sourceColumn": "Tax Amount"
+          },
+          {
+            "name": "Profit",
+            "dataType": "double",
+            "sourceColumn": "Profit"
+          },
+          {
+            "name": "Total Including Tax",
+            "dataType": "double",
+            "sourceColumn": "Total Including Tax"
+          },
+          {
+            "name": "Total Dry Items",
+            "dataType": "int64",
+            "sourceColumn": "Total Dry Items"
+          },
+          {
+            "name": "Total Chiller Items",
+            "dataType": "int64",
+            "sourceColumn": "Total Chiller Items"
+          },
+          {
+            "name": "Lineage Key",
+            "dataType": "int64",
+            "sourceColumn": "Lineage Key"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "History",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/DESKTOP-TMTVDKE\\BUI;WideWorldImportersDW\",",
+                "    Fact_Sale = Source{[Schema=\"Fact\",Item=\"Sale\"]}[Data],",
+                "    #\"Filtered Rows\" = Table.SelectRows(Fact_Sale, each [Invoice Date Key] >= #date(2015, 1, 1))",
+                "in",
+                "    #\"Filtered Rows\""
+              ]
+            },
+            "annotations": [
+              {
+                "name": "QueryEditorSerialization",
+                "value": [
+                  "<?xml version=\"1.0\" encoding=\"UTF-16\"?><Gemini xmlns=\"QueryEditorSerialization\"><AnnotationContent><![CDATA[<RSQueryCommandText>let",
+                  "    Source = #\"SQL/DESKTOP-TMTVDKE\\BUI;WideWorldImportersDW\",",
+                  "    Fact_Sale = Source{[Schema=\"Fact\",Item=\"Sale\"]}[Data]",
+                  "in",
+                  "    Fact_Sale</RSQueryCommandText><RSQueryCommandType>Text</RSQueryCommandType><RSQueryDesignState></RSQueryDesignState>]]></AnnotationContent></Gemini>"
+                ]
+              }
+            ]
+          },
+          {
+            "name": "Partition",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/DESKTOP-TMTVDKE\\BUI;WideWorldImportersDW\",",
+                "    Fact_Sale = Source{[Schema=\"Fact\",Item=\"Sale\"]}[Data]",
+                "in",
+                "    Fact_Sale"
+              ]
+            }
+          },
+          {
+            "name": "Sales 2020",
+            "dataView": "full",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = #\"SQL/DESKTOP-TMTVDKE\\BUI;WideWorldImportersDW\",",
+                "    Fact_Sale = Source{[Schema=\"Fact\",Item=\"Sale\"]}[Data],",
+                "    #\"Filtered Rows\" = Table.SelectRows(Fact_Sale, each [Invoice Date Key] >= #date(2015, 1, 1) and [Invoice Date Key] <= #date(2015, 12, 31))",
+                "in",
+                "    #\"Filtered Rows\""
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Total Sales",
+            "expression": " SUM('Fact Sale'[Total Excluding Tax])",
+            "kpi": {
+              "targetExpression": "'Fact Sale'[Target Sales]",
+              "statusGraphic": "Traffic Light - Single",
+              "statusDescription": [
+                "KPI Status = IF([Total Sales] >= [Target Sales], 1, IF([Total Sales] >= [Target Sales] * 0.9, 0, -1))",
+                "",
+                "",
+                "",
+                ""
+              ],
+              "statusExpression": [
+                "var x='Fact Sale'[Total Sales]/'Fact Sale'[_Total Sales Goal] return",
+                "            if(ISBLANK(x),BLANK(),",
+                "                    If(x<0,-1,",
+                "\t                If(x<1E-06,0,1)",
+                "                )",
+                "            )",
+                "            "
+              ],
+              "annotations": [
+                {
+                  "name": "GoalType",
+                  "value": "Measure"
+                },
+                {
+                  "name": "KpiStatusType",
+                  "value": "Linear"
+                },
+                {
+                  "name": "KpiThresholdType",
+                  "value": "Percentage"
+                },
+                {
+                  "name": "KpiThresholdOrdering",
+                  "value": "Ascending"
+                },
+                {
+                  "name": "KpiThresholdCount",
+                  "value": "2"
+                },
+                {
+                  "name": "KpiThreshold_0",
+                  "value": "0"
+                },
+                {
+                  "name": "KpiThreshold_1",
+                  "value": "0.0001"
+                }
+              ]
+            }
+          },
+          {
+            "name": "Target Sales",
+            "expression": [
+              " CALCULATE(",
+              "    [Total Sales],",
+              "    DATEADD('Dimension Date'[Date], -1, YEAR)",
+              ") * 1.15"
+            ]
+          },
+          {
+            "name": "Total Profit",
+            "expression": " SUM('Fact Sale'[Profit])"
+          },
+          {
+            "name": "Average Unit Price",
+            "expression": " AVERAGE('Fact Sale'[Unit Price])"
+          },
+          {
+            "name": "Total Quantity Sold",
+            "expression": " SUM('Fact Sale'[Quantity])"
+          },
+          {
+            "name": "Total Transactions",
+            "expression": " DISTINCTCOUNT('Fact Sale'[WWI Invoice ID])",
+            "kpi": {
+              "targetExpression": "'Fact Sale'[Sales Volume Growth Target]",
+              "statusGraphic": "Traffic Light - Single",
+              "statusExpression": [
+                "var x='Fact Sale'[Total Transactions]/'Fact Sale'[_Total Transactions Goal] return",
+                "            if(ISBLANK(x),BLANK(),",
+                "                    If(x<0.4,-1,",
+                "\t                If(x<0.8,0,1)",
+                "                )",
+                "            )",
+                "            "
+              ],
+              "annotations": [
+                {
+                  "name": "GoalType",
+                  "value": "Measure"
+                },
+                {
+                  "name": "KpiStatusType",
+                  "value": "Linear"
+                },
+                {
+                  "name": "KpiThresholdType",
+                  "value": "Percentage"
+                },
+                {
+                  "name": "KpiThresholdOrdering",
+                  "value": "Ascending"
+                },
+                {
+                  "name": "KpiThresholdCount",
+                  "value": "2"
+                },
+                {
+                  "name": "KpiThreshold_0",
+                  "value": "40"
+                },
+                {
+                  "name": "KpiThreshold_1",
+                  "value": "80"
+                }
+              ]
+            }
+          },
+          {
+            "name": "Sales by Colour",
+            "expression": " CALCULATE([Total Sales], ALL('Dimension Stock Item'[Color]))"
+          },
+          {
+            "name": "Profit Margin Percentage",
+            "expression": " DIVIDE([Total Profit], [Total Sales], 0)"
+          },
+          {
+            "name": "Sales Volume Growth Target",
+            "expression": [
+              " ",
+              "[Total Transactions] * 1.07"
+            ]
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "c04efc1a-4ce1-404c-8d81-3883b2d9c9a8",
+        "fromTable": "Fact Sale",
+        "fromColumn": "Delivery Date Key",
+        "toTable": "Dimension Date",
+        "toColumn": "Date",
+        "isActive": false
+      },
+      {
+        "name": "874e5d73-3c84-4b79-aa2a-28d0b6b1dc22",
+        "fromTable": "Fact Sale",
+        "fromColumn": "Invoice Date Key",
+        "toTable": "Dimension Date",
+        "toColumn": "Date"
+      },
+      {
+        "name": "fc1ff0b9-15a3-4883-8ae8-e690259b2f01",
+        "fromTable": "Fact Sale",
+        "fromColumn": "Bill To Customer Key",
+        "toTable": "Dimension Customer",
+        "toColumn": "Customer Key",
+        "isActive": false
+      },
+      {
+        "name": "78f7b27b-bccf-4a6c-ae3e-847c308d5b11",
+        "fromTable": "Fact Sale",
+        "fromColumn": "City Key",
+        "toTable": "Dimension City",
+        "toColumn": "City Key"
+      },
+      {
+        "name": "d0699de6-9337-45ec-899a-4cc44015b8d5",
+        "fromTable": "Fact Sale",
+        "fromColumn": "Customer Key",
+        "toTable": "Dimension Customer",
+        "toColumn": "Customer Key"
+      },
+      {
+        "name": "309d6c89-cf35-4097-8dc5-27c20ed7d038",
+        "fromTable": "Fact Sale",
+        "fromColumn": "Salesperson Key",
+        "toTable": "Dimension Employee",
+        "toColumn": "Employee Key"
+      },
+      {
+        "name": "d7691990-25da-48c5-9b2e-0410e7ae1f49",
+        "fromTable": "Fact Sale",
+        "fromColumn": "Stock Item Key",
+        "toTable": "Dimension Stock Item",
+        "toColumn": "Stock Item Key"
+      }
+    ],
+    "annotations": [
+      {
+        "name": "ClientCompatibilityLevel",
+        "value": "600"
+      }
+    ]
+  },
+  "id": "SemanticModel"
+}
